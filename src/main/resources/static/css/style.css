@@ -1,0 +1,66 @@
+
+.filter-link {
+    margin: 0 10px 0 10px;
+}
+.user-line {
+    margin: 10px 10px 10px 50px;
+    display: block;
+}
+.user-line button{
+    border-width: 0;
+    background: none;
+    cursor: pointer;
+}
+.datetime {
+    font-size: smaller;
+    color: #291717;
+}
+.message {
+    width: 80%;
+}
+.message.own {
+    margin-left: 20%;
+}
+.message p {
+    margin: 5px;
+}
+.message p.message-text {
+    display:inline-block;
+    text-align: left;
+    white-space: pre-wrap;
+}
+.unvisible {
+    visibility: hidden;
+    height: 0;
+}
+.error {
+    font-size: smaller;
+    color: red;
+}
+/*.unreaded {*/
+/*background: lightgray;*/
+/*}*/
+#unreaded {
+    position: fixed;
+    right: 0px;
+    top: 10px;
+}
+.popup {
+    background-color: lavender;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    border-radius: 10px;
+    border: 1px solid darkgrey;
+    padding: 5px;
+    margin: 3px;
+    /*display:inline-block;*/
+}
+.popup p {
+    margin: 0px;
+}
+.popup a {
+    text-decoration: none;
+    color: black;
+}
+#mapid { height: 180px; }

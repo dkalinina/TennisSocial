@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<th:block th:insert="fragments/header :: menu" />
+
+<script th:inline="javascript">
+    var p;
+    jQuery(document).ready(
+        function($) {
+            $("#city").change(function () {
+                $.post("/platforms/platforms_option",
+                    { index: $("#city").val() },
+                    function(platforms) {
+                        $("#offerMatch").attr("disabled", true);
+                        $("#platforms").empty();
+                        $("#platforms").append(platforms);
+                    });
+            });
+     });
+
+</script>
+
+<!--<p th:text="${'match with '}"></p>-->
+<!--<p th:text="${'match with '+another.login}"></p>-->
+
+<form method="POST" th:object="${match}">
+    <select id="city" name="city">
+        <option disabled selected>Выберите город</option>
+        <option
+                th:each="city : ${cities}"
+                th:value="${city.index}"
+                th:text="${city.name}"
+                th:selected="${match.platform != null && match.platform.city.equals(city)}" />
+    </select>
+    <div id="platforms" >
+        <th:block th:if="${match.platform != null}" th:insert="fragments/platforms_option" />
+    </div>
+    <p class="errors"
+       th:if="${#fields.hasErrors('platform')}"
+       th:errors="*{platform}"/>
+    <input name="dateTime" type="datetime-local" th:value="${dateTime}" />
+    <p class="errors"
+       th:if="${#fields.hasErrors('dateTime')}"
+       th:errors="*{dateTime}"/>
+    <br>
+    <button id="offerMatch" th:disabled="${match.platform == null}" >offer match to</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+<div th:class="${(message.readed) ? '' : 'unreaded'}"
+   th:classappend="${(user.equals(message.author) ? 'own' : '')}">
+    <hr>
+    <p th:text="${message.message}"  class="message-text"></p>
+    <p class="error">сообщение не было отправлено, так как есть неподтвержденная игра</p>
+</div>

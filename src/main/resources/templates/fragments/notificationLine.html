@@ -1,0 +1,33 @@
+<th:block th:switch="${true}">
+    <th:block
+            th:case="${notification_message != null || element instanceof T(kalinina.darina.entities.Message)}"
+            th:insert="fragments/notifications/newMessage :: popup(${(notification_message != null) ? notification_message : element})" />
+
+    <th:block
+            th:case="${element instanceof T(kalinina.darina.entities.Match)
+                            && element.isFulfilled()
+                            && !element.isScoredBy(user)}"
+            th:insert="fragments/notifications/matchScore :: popup(${element})" />
+
+    <th:block
+            th:case="${notification_dialog != null
+                            && notification_dialog.match == null
+                            && !notification_dialog.prevMatchWasDeclinedByUser(user)
+                            && !notification_dialog.prevMatchWasDeclinedByAnotherUser(user)}"
+            th:insert="fragments/notifications/matchScore :: popup(${notification_dialog})" />
+
+    <th:block
+            th:case="${notification_dialog != null && notification_dialog.match == null}"
+            th:insert="fragments/notifications/matchDecline :: popup(${notification_dialog})" />
+
+    <th:block
+            th:case="${notification_dialog != null
+                            && notification_dialog.match.isConfirmedByInviter()
+                            && notification_dialog.match.isConfirmedByInvited()}"
+            th:insert="fragments/notifications/matchConfirm :: popup(${notification_dialog})" />
+
+    <th:block
+            th:case="${notification_dialog != null && !notification_dialog.match.isConfirmedBy(user) ||
+                        element instanceof T(kalinina.darina.entities.Match) && !element.isConfirmedBy(user)}"
+            th:insert="fragments/notifications/matchOffer :: popup(${(notification_dialog != null) ? notification_dialog.match : element})" />
+</th:block>

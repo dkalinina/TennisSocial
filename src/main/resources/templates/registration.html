@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tennis Registration</title>
+    <link rel="stylesheet" href="/css/style.css" type="text/css" />
+</head>
+<body>
+
+<p>reg</p>
+<form method="POST" th:object="${newUser}">
+    <p>
+        login
+        <input type="text" name="login" th:value="${newUser.login}" />
+
+        <p class="errors"
+              th:if="${#fields.hasErrors('login')}"
+              th:errors="*{login}"/>
+    </p>
+    <p>
+        password
+        <input type="password" name="password" />
+
+        <p class="errors"
+           th:if="${#fields.hasErrors('password')}"
+           th:errors="*{password}"/>
+    </p>
+    <p>
+        confirm password
+        <input type="password" name="confirmPassword" />
+
+        <p class="errors"
+           th:if="${#fields.hasErrors('confirmPassword')}"
+           th:errors="*{confirmPassword}"/>
+    </p>
+    <p>
+        roles
+        <input type="checkbox"
+               name="roles"
+               th:each="role : ${roles}"
+               th:if="${role.isNotAdmin() && !role.isAlternative()}"
+               th:value="${role.role}"
+               th:text="${role.role}"
+               th:checked="${newUser != null && newUser.roles.contains(role)}" />
+        <div style="border: 1px solid black;">
+            <!--I hate chrome indeterminate state-->
+            <input id="hiddenradio" type="radio" name="roles" value="" style="display: none;" checked />
+
+            <th:block th:each="role : ${roles}" th:if="${role.isNotAdmin() && role.isAlternative()}">
+                <input type="radio"
+                       style="-webkit-appearance: checkbox;-moz-appearance: checkbox;"
+                       name="roles"
+                       th:id="${role.role}"
+                       th:value="${role.role}"
+                       th:text="${role.role}"
+                       th:checked="${newUser != null && newUser.roles.contains(role)}"
+                       onclick="
+                       if ($(this).attr('previousValue') == 'true') {
+                           this.checked = false
+                           document.getElementById('hiddenradio').checked = true;
+                       }
+                       $('input[name=roles][type=radio]').removeAttr('previousValue')
+                       $(this).attr('previousValue', this.checked);" />
+            </th:block>
+        </div>
+
+
+        <p class="errors"
+           th:if="${#fields.hasErrors('roles')}"
+           th:errors="*{roles}"/>
+    </p>
+    <button>reg</button>
+</form>
+
+</body>
+</html>

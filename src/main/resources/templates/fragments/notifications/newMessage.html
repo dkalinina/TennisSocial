@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <th:block th:fragment="popup (message)"
+              th:if="${#httpServletRequest.requestURI != '/dialog' ||
+                        #httpServletRequest.getParameter('user') != message.getAuthor().login}"
+              th:insert="fragments/notifications/base ::
+                            popup(
+                                ${'/dialog?user='+message.getAuthor().login},
+                                ${'новое сообщение от '+message.getAuthor().login}
+                                )"/>
+</body>
+</html>

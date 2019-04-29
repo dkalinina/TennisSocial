@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<th:block th:insert="fragments/header :: menu" />
+
+<div class="user-line" th:each="u : ${companions}" th:if="${!u.equals(user)}" th:id="${u.login+'_userline'}">
+    <th:block th:insert="fragments/userLine" />
+</div>
+<!--<hr>-->
+<!--Начните беседу с вашими друзьями-->
+<!--<div class="user-line" th:each="u : ${friends}" th:if="${!u.equals(user) && !companions.contains(u)}" th:id="${u.login+'_userline'}">-->
+<!--    <th:block th:insert="fragments/userLine" />-->
+<!--</div>-->
+<!--<hr>-->
+<!--Эти люди хотят быть вашими друзьями-->
+<!--<div class="user-line" th:each="u : ${almostFriends}" th:if="${!u.equals(user) }" th:id="${u.login+'_userline'}">-->
+<!--    <th:block th:insert="fragments/userLine" />-->
+<!--</div>-->
+
+</body>
+</html>

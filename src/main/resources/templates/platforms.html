@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<th:block th:insert="fragments/header :: menu" />
+
+<p>platforms</p>
+
+<script th:inline="javascript">
+    var mymap;
+    var markers;
+    var createdMarker;
+    var createdMarkers;
+    var greenIcon = new L.Icon({
+        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    jQuery(document).ready(
+        function($) {
+            $("#city").change(function () {
+                $.post("/platforms/platforms_list",
+                    { index: $("#city").val() },
+                    function(platforms) {
+                        console.log([[${city}]])
+
+                        markers.clearLayers();
+                        var lats = [], longs = [];
+                        platforms.forEach(function (platform) {
+                            L.marker([platform.latitude, platform.longitude]).addTo(markers);
+                            lats.push(platform.latitude);
+                            longs.push(platform.longitude);
+                        })
+
+                        if (platforms.length > 0) {
+                            var lat = lats.reduce(function (a, b) {
+                                return a + b;
+                            }) / (platforms.length);
+                            var long = longs.reduce(function (a, b) {
+                                return a + b;
+                            }) / (platforms.length);
+                            mymap.setView([lat, long], 10);
+                        }
+
+                    }).fail(function(xhr, textStatus, errorThrown) {
+                    console.log("---------------------------------");
+                    console.log("error ");
+                    console.log(errorThrown);
+                    console.log("---------------------------------");
+                });
+            });
+
+            // mymap = L.map('mapid').setView([0, 0], 0);
+            mymap = L.map('mapid').setView([59.899265, 30.486031], 13);
+            markers = L.layerGroup().addTo(mymap);
+            createdMarkers = L.layerGroup().addTo(mymap);
+
+            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                    '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                id: 'mapbox.streets'
+            }).addTo(mymap);
+
+            $("#timetable [type=radio]")
+                .on('change',
+                    function() {
+                        var select = "[id='"+$(this).get(0).parentNode.id+"'] [type=time]";
+
+                        if (this.value) {
+                            $(select).attr("disabled", true)
+                        } else {
+                            $(select).attr("disabled", false)
+                        }
+                    });
+
+            if ([[${solveErrors}]]) {
+                createdMarkers.clearLayers();
+                position = [$('#latitude').val(), $('#longitude').val()]
+                createdMarker = L.marker(position, {draggable: true, icon: greenIcon}).addTo(createdMarkers)
+                    .on('dragend', function () {
+                        $('#latitude').val(createdMarker.getLatLng().lat);
+                        $('#longitude').val(createdMarker.getLatLng().lng);
+                    });
+                mymap.setView(position, 13);
+            }
+
+        });
+
+    function toggleButtons() {
+        document.getElementById('creationFrm').classList.toggle('unvisible');
+        document.getElementById('creationBtn').classList.toggle('unvisible');
+    }
+
+    function preparePlatform() {
+        toggleButtons();
+
+        var minZoom = 10;
+        var center = mymap.getCenter();
+        if (mymap._zoom < minZoom) {
+            mymap.setView(center, minZoom);
+        }
+        $('#latitude').val(center.lat);
+        $('#longitude').val(center.lng);
+        createdMarkers.clearLayers();
+        createdMarker = L.marker(center, {draggable: true, icon: greenIcon}).addTo(createdMarkers)
+            .on('dragend', function () {
+                $('#latitude').val(createdMarker.getLatLng().lat);
+                $('#longitude').val(createdMarker.getLatLng().lng);
+            });
+    }
+
+    function createPlatform() {
+        toggleButtons();
+        L.marker(createdMarker.getLatLng()).addTo(markers);
+        createdMarkers.clearLayers();
+    }
+
+
+</script>
+
+<script>
+</script>
+
+<select id="city" name="city">
+    <option disabled selected>Выберите город</option>
+    <option th:each="city : ${cities}" th:value="${city.index}" th:text="${city.name}" />
+</select>
+<br>
+
+
+<div id="mapid"></div>
+
+<button id="creationBtn" onclick="preparePlatform()" th:classappend="${solveErrors == null ? '' : 'unvisible'}">Создать площадку</button>
+<div id="creationFrm" th:classappend="${solveErrors == null ? 'unvisible' : ''}">
+<form method="POST" th:object="${newPlatform}">
+    <input type="hidden" th:field="*{latitude}" />
+    <input type="hidden" th:field="*{longitude}" />
+    <input type="text" name="name" />
+    <p class="error"
+       th:if="${#fields.hasErrors('name')}"
+       th:errors="*{name}"/>
+
+    <p>расписание</p>
+    <div id="timetable">
+        <div th:each="day : ${week}"
+             th:id="${'timetable.'+day.toString().toLowerCase()}">
+            <p th:text="${day}"></p>
+            <input
+                    type="radio"
+                    th:name="${'timetable.'+day.toString().toLowerCase()+'.openWholeDay'}"
+                    value="true"
+                    th:text="${'целый день открыто'}"
+                    checked />
+            <br />
+            <input
+                    type="radio"
+                    th:name="${'timetable.'+day.toString().toLowerCase()+'.openWholeDay'}"
+                    th:value="false"
+                    th:text="${'целый день закрыто'}"
+                    th:checked="${solveErrors != null
+                                            && newPlatform.timetable != null
+                                            && __${'newPlatform.timetable.'+day.toString().toLowerCase()}__ != null
+                                            && __${'newPlatform.timetable.'+day.toString().toLowerCase()+'.openWholeDay'}__ == false}" />
+            <br />
+            <input
+                    type="radio"
+                    th:name="${'timetable.'+day.toString().toLowerCase()+'.openWholeDay'}"
+                    th:value="null"
+                    th:text="${'расписание'}"
+                    th:checked="${solveErrors != null
+                                            && newPlatform.timetable != null
+                                            && __${'newPlatform.timetable.'+day.toString().toLowerCase()}__ != null
+                                            && __${'newPlatform.timetable.'+day.toString().toLowerCase()+'.openWholeDay'}__ == null}" />
+            <input type="time"
+                   th:field="*{__${'timetable.'+day.toString().toLowerCase()+'.openOn'}__}"
+                   th:attr="disabled = ${solveErrors == null
+                                            || newPlatform.timetable == null
+                                            || __${'newPlatform.timetable.'+day.toString().toLowerCase()}__ == null
+                                            || __${'newPlatform.timetable.'+day.toString().toLowerCase()+'.openWholeDay'}__ != null}" />
+            <input type="time"
+                   th:field="*{__${'timetable.'+day.toString().toLowerCase()+'.closeOn'}__}"
+                   th:attr="disabled = ${solveErrors == null
+                                            || newPlatform.timetable == null
+                                            || __${'newPlatform.timetable.'+day.toString().toLowerCase()}__ == null
+                                            || __${'newPlatform.timetable.'+day.toString().toLowerCase()+'.openWholeDay'}__ != null}" />
+
+            <p class="error"
+               th:if="${#fields.hasErrors('timetable.'+day.toString().toLowerCase()+'.openOn')}"
+               th:errors="*{__${'timetable.'+day.toString().toLowerCase()+'.openOn'}__}"/>
+        </div>
+    </div>
+    <br />
+    <button onclick="createPlatform()">Добавить площадку</button>
+</form>
+</div>
+
+</body>
+</html>

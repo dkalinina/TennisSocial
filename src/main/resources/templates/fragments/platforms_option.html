@@ -1,0 +1,13 @@
+<th:block th:if="${platforms != null && !platforms.isEmpty()}">
+    <select id="platform" name="platform" onclick="$('#offerMatch').attr('disabled', false);">
+        <option disabled selected>Выберите площадку</option>
+        <option
+                th:each="p: ${platforms}"
+                th:value="${p.id}"
+                th:text="${p.name}"
+                th:selected="${platform != null && platform.equals(p)}"/>
+    </select>
+</th:block>
+<th:block th:if="${platforms == null || platforms.isEmpty()}">
+    <label>в этом городе пока нет отмеченных площадок</label>
+</th:block>

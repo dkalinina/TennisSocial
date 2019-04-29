@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <title>Tennis</title>
+    <link rel="stylesheet" href="/css/style.css" type="text/css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+          integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+            integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+            crossorigin=""></script>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script th:inline="javascript">
+        function addNotification(element) {
+            $("#unreaded").append(element);
+        }
+
+        function printMessage(message, user) {
+            addNotification(message.notification);
+        }
+
+        function updateMatch(match, user) {
+            addNotification(match.notification);
+        }
+
+        var stompClient = Stomp.over(new SockJS('/gs-guide-websocket'));
+        stompClient.debug = null;
+        stompClient.connect({}, function () {
+            var another = null
+            this.subscribe('/user/queue/messages/', function (greeting) {
+                printMessage(JSON.parse(greeting.body), [[${(another == null) ? '' : another.login}]]);
+            });
+            this.subscribe('/user/queue/matches/', function (greeting) {
+                updateMatch(JSON.parse(greeting.body), [[${(another == null) ? '' : another.login}]]);
+            });
+        });
+    </script>
+</head>
+<body>
+<div th:fragment="menu">
+    <form sec:authorize="!isAuthenticated()" method="GET" th:action="@{/login}">
+        <input type="submit" value="Login"/>
+    </form>
+    <form sec:authorize="isAuthenticated()" method="POST" th:action="@{/logout}">
+        <input type="submit" value="Logout"/>
+        <label>Вы вошли как <span sec:authentication="name"></span></label>
+    </form>
+<!--    <p th:text="${unreaded}" />-->
+
+    <div id="unreaded" align="right">
+        <th:block th:if="${unreaded != null}" >
+            <th:block th:each="element : ${unreaded}" th:insert="fragments/notificationLine" />
+        </th:block>
+    </div>
+    <hr/>
+    <a href="/">главная</a>
+    <a href="/search">поиск</a>
+    <a href="/score">ваши матчи</a>
+    <a href="/platforms">площадки</a>
+    <hr/>
+</div>
+
+</body>
+</html>
+

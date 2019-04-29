@@ -1,0 +1,52 @@
+2019-04-01 18:33:02 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CUSTOMER" не найдена
+Table "CUSTOMER" not found; SQL statement:
+select * from customer where name like ? [42102-199]
+2019-04-01 18:33:04 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CUSTOMER" не найдена
+Table "CUSTOMER" not found; SQL statement:
+select * from customer where name like ? [42102-199]
+2019-04-01 18:37:26 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "SHOW TABLES FROM 'INFORMATION_SCHEMA'[*] "; ожидалось "identifier"
+Syntax error in SQL statement "SHOW TABLES FROM 'INFORMATION_SCHEMA'[*] "; expected "identifier"; SQL statement:
+show tables from 'INFORMATION_SCHEMA' [42001-199]
+2019-04-01 18:39:01 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CUSTOMER" не найдена
+Table "CUSTOMER" not found; SQL statement:
+select * from customer [42102-199]
+2019-04-01 18:39:35 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CUSTOMER" не найдена
+Table "CUSTOMER" not found; SQL statement:
+select * from customer [42102-199]
+2019-04-01 18:39:52 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CONSUMER" не найдена
+Table "CONSUMER" not found; SQL statement:
+select * from CONSUMER [42102-199]
+2019-04-01 18:39:59 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CONSUMER" не найдена
+Table "CONSUMER" not found; SQL statement:
+select * from consumer [42102-199]
+2019-04-01 18:40:04 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CONSUMER" не найдена
+Table "CONSUMER" not found; SQL statement:
+select * from consumer [42102-199]
+2019-04-01 18:40:05 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CONSUMER" не найдена
+Table "CONSUMER" not found; SQL statement:
+select * from consumer [42102-199]
+2019-04-01 18:40:05 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CONSUMER" не найдена
+Table "CONSUMER" not found; SQL statement:
+select * from consumer [42102-199]
+2019-04-01 18:40:06 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CONSUMER" не найдена
+Table "CONSUMER" not found; SQL statement:
+select * from consumer [42102-199]
+2019-04-01 18:40:06 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CONSUMER" не найдена
+Table "CONSUMER" not found; SQL statement:
+select * from consumer [42102-199]
+2019-04-01 18:40:48 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CONSUMER" не найдена
+Table "CONSUMER" not found; SQL statement:
+select * from consumer [42102-199]

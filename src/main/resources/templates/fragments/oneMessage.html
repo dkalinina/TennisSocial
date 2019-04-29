@@ -1,0 +1,7 @@
+<div class="message"
+     th:classappend="|  ${(message.readed) ? '' : 'unreaded'}
+                        ${(user.equals(message.author) ? 'own' : '')}   |"
+     th:align="${(user.equals(message.author) ? 'right' : 'left')}">
+    <p th:text="${message.dateTime.toLocalTime()}" class="datetime"></p>
+    <p th:text="${message.message}" class="message-text"></p>
+</div>

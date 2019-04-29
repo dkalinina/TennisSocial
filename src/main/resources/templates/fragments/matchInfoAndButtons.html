@@ -1,0 +1,13 @@
+<div>
+    <label th:text="${dialog.match.platform.city.name}" />
+    ,
+    <label th:text="${dialog.match.platform.name}" />
+</div>
+<div>
+    <label th:text="${dialog.match.dateTime.toLocalDate()}" />
+    <label th:text="${dialog.match.dateTime.toLocalTime()}" />
+</div>
+<div>
+    <button id="confirmMatch" th:if="${(!dialog.match.isConfirmedBy(user))}">confirm</button>
+    <button id="declineMatch">decline match</button>
+</div>

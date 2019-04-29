@@ -1,0 +1,29 @@
+<label th:text="${u.login}"/>
+<form method="POST" th:object="${dialog}">
+    <button name="invited" th:value="${u.login}">
+        <img th:if="${companions.contains(u)}" width="20px" th:src="@{/images/s1.png}" title="уже есть диалог"/>
+        <img th:if="${!companions.contains(u)}" width="20px" th:src="@{/images/s2.png}" title="еще нет диалога"/>
+    </button>
+</form>
+
+<th:block th:switch="${true}">
+    <form th:case="${friends.contains(u)}" method="GET" th:action="@{'/offerMatch?user='+${u.login}}">
+        <button name="to" th:value="${u.login}" title="друзья">
+            <img width="20px" th:src="@{/images/friend.png}"/>
+        </button>
+    </form>
+
+    <th:block th:case="${almostFriends.contains(u)}">
+        <button name="to" th:value="${u.login}" title="есть заявка в друзья">
+            <img width="20px" th:src="@{/images/almost-friend.png}"/>
+        </button>
+    </th:block>
+
+    <th:block th:case="${true}">
+        <button name="to" th:value="${u.login}" title="не друзья">
+            <img width="20px" th:src="@{/images/not-friend.png}"/>
+        </button>
+    </th:block>
+
+</th:block>
+

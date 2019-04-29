@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div class="popup"
+         align="right"
+         th:fragment="popup (href, text)">
+        <label th:onclick="this.closest('div.popup').remove()">X</label>
+        <p>
+            <a th:href="${href}" th:text="${text}" />
+        </p>
+    </div>
+</body>
+</html>
