@@ -90,52 +90,6 @@ public class DialogController extends WithAnotherUserController {
 
     @GetMapping("/offerMatch")
     public String offerMatch(@ModelAttribute("another") User another) {
-        return "redirect:/offerMatch?user="+another.getLogin();
-    }
-
-    @GetMapping("/declineMatch")
-    public String declineMatch(@ModelAttribute("dialog") Dialog dialog,
-                               @ModelAttribute("user") User user,
-                               @ModelAttribute("another") User another) {
-        Match match = dialog.getMatch();
-        dialog.setMatch(null);
-        dialogRepository.save(dialog);
-
-        if (match != null) {
-            if (match.isConfirmedBy(match.getAnother(user))) {
-                if(dialog.getInviter().equals(user)) dialog.setPrevMatchWasDeclinedByInviterUser(true);
-                else if(dialog.getInvited().equals(user)) dialog.setPrevMatchWasDeclinedByInvitedUser(true);
-                dialogRepository.save(dialog);
-            }
-            matchRepository.delete(match);
-
-            if (match.getDateTime().toLocalDate().equals(LocalDate.now())) {
-                scheduleService.removeDialog(dialog);
-            }
-        }
-
-        updateSender.sendNewDialogReactionViews(dialog);
-
-        return "redirect:/dialog?user="+another.getLogin();
-    }
-
-    @GetMapping("/confirmMatch")
-    public String confirmMatch(@ModelAttribute("dialog") Dialog dialog,
-                               @ModelAttribute("user") User user,
-                               @ModelAttribute("another") User another) {
-        Match match = dialog.getMatch();
-
-        if (match.isInviter(user)) match.setConfirmedByInviter(true);
-        else if (match.isInvited(user)) match.setConfirmedByInvited(true);
-
-        matchRepository.save(match);
-
-        if (match.getDateTime().toLocalDate().equals(LocalDate.now())) {
-            scheduleService.addDialog(dialog);
-        }
-
-        updateSender.sendNewDialogReactionViews(dialog);
-
-        return "redirect:/dialog?user="+another.getLogin();
+        return "redirect:/match/offer?user="+another.getLogin();
     }
 }

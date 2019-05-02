@@ -68,7 +68,6 @@ public class UpdateSender {
 
         if (match == null) {
             resolveViewName = "fragments/newMessageArea";
-            modelInfo.put("another", another);
         } else {
             resolveViewName = "fragments/matchInfoAndButtons";
             modelInfo.put("cities", cityRepository.findAll());
@@ -84,6 +83,7 @@ public class UpdateSender {
         }
 
         modelInfo.put("user", user);
+        modelInfo.put("another", another);
         modelInfo.put("notification_dialog", dialog);
 
         return new NotificationsAndUpdates(

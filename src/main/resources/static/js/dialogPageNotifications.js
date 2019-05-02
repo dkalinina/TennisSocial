@@ -7,13 +7,6 @@ function setButtonsFunctions(user) {
                 $("#messagesArea").append(m);
             });
     });
-
-    $("#declineMatch").click(function(event) {
-        $.get("dialog/declineMatch?user="+user)
-    });
-    $("#confirmMatch").click(function(event) {
-        $.get("dialog/confirmMatch?user="+user)
-    });
 }
 
 //на этой странице функция переопределена

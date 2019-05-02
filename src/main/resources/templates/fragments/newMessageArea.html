@@ -1,7 +1,10 @@
-<textarea name="message" id="newMessage"></textarea>
-<button id="sendNewMessage">send</button>
+<form method="POST" action="/dialog">
+    <textarea name="message" id="newMessage"></textarea>
+    <input type="hidden" name="user" th:value="${another.login}" />
+    <button type="button" id="sendNewMessage">send</button>
+</form>
 
-<form method="GET" action="/dialog/offerMatch">
+<form method="GET" action="/match/offer">
     <input type="hidden" name="user" th:value="${another.login}" />
     <button>offer match</button>
 </form>

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 
 @Controller
-@RequestMapping("/offerMatch")
+@RequestMapping("/match")
 @SessionAttributes({"user", "roles"})
 public class MatchController extends WithAnotherUserController {
     @Autowired
@@ -50,7 +50,7 @@ public class MatchController extends WithAnotherUserController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/offer")
     public String createMatch(@ModelAttribute("match") Match match,
                               @ModelAttribute("another") User another) {
         if (match.isConfirmedBy(another))
@@ -58,7 +58,7 @@ public class MatchController extends WithAnotherUserController {
         return "newMatch";
     }
 
-    @PostMapping()
+    @PostMapping("/offer")
     public String offerMatch(@ModelAttribute("dialog") Dialog dialog,
                              @ModelAttribute("user") User user,
                              @RequestParam("user") String login,
@@ -86,6 +86,52 @@ public class MatchController extends WithAnotherUserController {
 
         dialog.setMatch(match);
         dialog = dialogRepository.save(dialog);
+
+        if (match.getDateTime().toLocalDate().equals(LocalDate.now())) {
+            scheduleService.addDialog(dialog);
+        }
+
+        updateSender.sendNewDialogReactionViews(dialog);
+
+        return "redirect:/dialog?user="+another.getLogin();
+    }
+
+    @GetMapping("/decline")
+    public String declineMatch(@ModelAttribute("dialog") Dialog dialog,
+                               @ModelAttribute("user") User user,
+                               @ModelAttribute("another") User another) {
+        Match match = dialog.getMatch();
+        dialog.setMatch(null);
+        dialogRepository.save(dialog);
+
+        if (match != null) {
+            if (match.isConfirmedBy(match.getAnother(user))) {
+                if(dialog.getInviter().equals(user)) dialog.setPrevMatchWasDeclinedByInviterUser(true);
+                else if(dialog.getInvited().equals(user)) dialog.setPrevMatchWasDeclinedByInvitedUser(true);
+                dialogRepository.save(dialog);
+            }
+            matchRepository.delete(match);
+
+            if (match.getDateTime().toLocalDate().equals(LocalDate.now())) {
+                scheduleService.removeDialog(dialog);
+            }
+        }
+
+        updateSender.sendNewDialogReactionViews(dialog);
+
+        return "redirect:/dialog?user="+another.getLogin();
+    }
+
+    @GetMapping("/confirm")
+    public String confirmMatch(@ModelAttribute("dialog") Dialog dialog,
+                               @ModelAttribute("user") User user,
+                               @ModelAttribute("another") User another) {
+        Match match = dialog.getMatch();
+
+        if (match.isInviter(user)) match.setConfirmedByInviter(true);
+        else if (match.isInvited(user)) match.setConfirmedByInvited(true);
+
+        matchRepository.save(match);
 
         if (match.getDateTime().toLocalDate().equals(LocalDate.now())) {
             scheduleService.addDialog(dialog);

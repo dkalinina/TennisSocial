@@ -8,6 +8,12 @@
     <label th:text="${dialog.match.dateTime.toLocalTime()}" />
 </div>
 <div>
-    <button id="confirmMatch" th:if="${(!dialog.match.isConfirmedBy(user))}">confirm</button>
-    <button id="declineMatch">decline match</button>
+    <form method="GET" action="/match/confirm" th:if="${(!dialog.match.isConfirmedBy(user))}">
+        <input type="hidden" name="user" th:value="${another.login}" />
+        <button >confirm</button>
+    </form>
+    <form method="GET" action="/match/decline">
+        <input type="hidden" name="user" th:value="${another.login}" />
+        <button>decline match</button>
+    </form>
 </div>

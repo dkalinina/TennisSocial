@@ -7,8 +7,8 @@
 </form>
 
 <th:block th:switch="${true}">
-    <form th:case="${friends.contains(u)}" method="GET" th:action="@{'/offerMatch?user='+${u.login}}">
-        <button name="to" th:value="${u.login}" title="друзья">
+    <form th:case="${friends.contains(u)}" method="GET" th:action="@{'/match/offer'}">
+        <button name="user" th:value="${u.login}" title="друзья">
             <img width="20px" th:src="@{/images/friend.png}"/>
         </button>
     </form>

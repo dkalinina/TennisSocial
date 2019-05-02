@@ -17,10 +17,26 @@
         <label th:text="${match.platform.city.name}" />
         ,
         <label th:text="${match.platform.name}" />
-        <label th:if="${match.isConfirmedBy(match.getAnother(user))}"
+
+
+        <label th:if="${match.isFulfilled()}"
                th:utext="${'✓'}"
                style="color:green; font-weight: bold;"
                th:title="${'подтвеждено '+match.getAnother(user).login}" />
+        <form th:if="${!match.isFulfilled() && match.isConfirmedBy(user)}"
+              method="GET"
+              action="/match/decline">
+            <button name="user" th:value="${match.getAnother(user).login}">
+                отменить
+            </button>
+        </form>
+        <form th:if="${!match.isFulfilled() && !match.isConfirmedBy(user)}"
+              method="GET"
+              action="/match/confirm">
+            <button name="user" th:value="${match.getAnother(user).login}">
+                подтвердить
+            </button>
+        </form>
     </div>
 </div>
 
