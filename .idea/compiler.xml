@@ -9,5 +9,8 @@
         <module name="TennisSocial" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="TennisSocial" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

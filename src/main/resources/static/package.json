@@ -1,0 +1,31 @@
+{
+  "name": "tennis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Darina Kalinina, Varvara Ingilevich",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "requirejs": "^2.3.6",
+    "rest": "^2.0.0"
+  },
+  "scripts": {
+    "build": "webpack -d",
+    "dev": "webpack-dev-server --content-base js/"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-transform-regenerator": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "webpack": "^4.32.2",
+    "webpack-dev-server": "^3.4.1"
+  }
+}
